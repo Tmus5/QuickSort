@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Quicksorter.cs" />
+    <Compile Include="Assets\Scripts\SortItemInfo.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/tommu/source/repos/QuickSort/Quicksort/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>

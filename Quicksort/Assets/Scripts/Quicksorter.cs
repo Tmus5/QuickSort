@@ -1,5 +1,6 @@
 ﻿
 using Assets.Scripts;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,7 @@ public class Quicksorter : MonoBehaviour
         var numberToGenerate = (int)((((2f * Camera.main.orthographicSize) * Camera.main.aspect) - 2f) / 0.4f);
         NumbersToSort = Enumerable
                         .Repeat(0, numberToGenerate)
-                        .Select(i => (Mathf.Round(Random.Range(MinNumber, MaxNumber) * 100f) / 100f))
+                        .Select(i => UnityEngine.Random.Range(MinNumber, MaxNumber))
                         .ToArray();
 
         Debug.Log(NumbersToSort.Count());
@@ -43,7 +44,7 @@ public class Quicksorter : MonoBehaviour
         SortItemInfo info = newSquare.AddComponent<SortItemInfo>();
         info.Height = height;
         info.PositionInList = posInList;
-        var colorToUse = new Color(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), height * 100);
+        var colorToUse = new Color(UnityEngine.Random.Range(0.0f, 1.0f), UnityEngine.Random.Range(0.0f, 1.0f), height * 100);
 
         List<Color> cols = new List<Color>();
         for (int i = 0; i < (texture.width * texture.height); i++)
@@ -93,20 +94,20 @@ public class Quicksorter : MonoBehaviour
     {
         if (listToSort.Length > 1)
         {
-            float pivot = listToSort[0];
+            float pivot = listToSort[UnityEngine.Random.Range(0,listToSort.Length-1)];
+            Debug.Log(pivot);
             int left = 0;
             int right = listToSort.Length - 1;
             while (left <= right)
             {
                 while (listToSort[left] < pivot)
-                {
-                    left++;
-                }
+                        left++;
                 while (listToSort[right] > pivot)
                     right--;
                 if (left <= right)
                 {
                     Swap(GameObject.Find(listToSort[left].ToString()), GameObject.Find(listToSort[right].ToString()));
+
                     left++;
                     right--;
                 }
@@ -114,11 +115,11 @@ public class Quicksorter : MonoBehaviour
             List<float> startToPivot = new List<float>();
             List<float> pivotToEnd = new List<float>();
 
-            for (int i = 0; i < left; i++)
+            for (int i = 0; i < right; i++)
                 startToPivot.Add(listToSort[i]);
             QuickSort(startToPivot.ToArray());
 
-            for (int i = 0; i < right; i++)
+            for (int i = left; i < listToSort.Length -1; i++)
                 pivotToEnd.Add(listToSort[i]);
             QuickSort(pivotToEnd.ToArray());
                     
@@ -127,14 +128,14 @@ public class Quicksorter : MonoBehaviour
 
     public void Swap(GameObject currentPosition, GameObject NewPosition)
     {
-        //GameObject lowestItem = GameObject.Find(ItemsToSort.Min(x => x.Height).ToString());
-        //GameObject highestItem = GameObject.Find(ItemsToSort.Max(x => x.Height).ToString());
 
         var currentPos = new Vector3(currentPosition.transform.position.x, currentPosition.transform.position.y);
         var newPos = new Vector3(NewPosition.transform.position.x, NewPosition.transform.position.y);
 
         currentPosition.transform.position = newPos;
         NewPosition.transform.position = currentPos;
+        
+        Debug.Log(currentPosition.name + "swapped with" + NewPosition.name);
 
     }
 

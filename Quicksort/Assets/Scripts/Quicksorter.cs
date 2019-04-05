@@ -14,7 +14,7 @@ public class Quicksorter : MonoBehaviour
     private int posInList = 1;
     private float xPosToSpawn = 0.0f;
     public List<SortItemInfo> ItemsToSort = new List<SortItemInfo>();
-    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,8 +22,9 @@ public class Quicksorter : MonoBehaviour
         var numberToGenerate = (int)((((2f * Camera.main.orthographicSize) * Camera.main.aspect) - 2f) / 0.4f);
         NumbersToSort = Enumerable
                         .Repeat(0, numberToGenerate)
-                        .Select(i => Random.Range(MinNumber, MaxNumber))
+                        .Select(i => (Mathf.Round(Random.Range(MinNumber, MaxNumber) * 100f) / 100f))
                         .ToArray();
+
         Debug.Log(NumbersToSort.Count());
         foreach (var number in NumbersToSort)
             GenerateSquare(number);
@@ -32,7 +33,7 @@ public class Quicksorter : MonoBehaviour
     void GenerateSquare(float height)
     {
         var widthOfObject = 0.3f;
-        
+
         GameObject newSquare = new GameObject();
         newSquare.name = height.ToString();
         newSquare.transform.Translate(xPosToSpawn, -4.0f, newSquare.transform.position.z);
@@ -59,17 +60,69 @@ public class Quicksorter : MonoBehaviour
 
     }
 
-    public void QuickSort()
-    {
-        float pivotPoint = ItemsToSort.First().Height;
-        foreach (var item in ItemsToSort.Where(xx => xx.Height != pivotPoint))
-        {
-            if (item.Height < pivotPoint)
-                Swap(GameObject.Find(item.Height.ToString()), GameObject.Find(pivotPoint.ToString()));
-            //Thread.Sleep(1000);
-        }
-        
 
+    //public float Partition(List<SortItemInfo> listToPartition, float left, float right)
+    //{
+    //    float pivot = listToPartition.Where(xx => xx.Height == left).First().Height;
+    //    while(true)
+    //    {
+    //        while(listToPartition.Where(xx => xx.Height == left).First().Height < pivot)
+    //        {
+    //            left++;
+    //        }
+
+    //        while(listToPartition.Where(xx => xx.Height == right).First().Height > pivot)
+    //        {
+    //            right++;
+    //        }
+
+    //        if(left < right)
+    //        {
+    //            if (listToPartition.Where(xx => xx.Height == left).First() == listToPartition.Where(xx => xx.Height == right).First()) return right;
+
+    //            Swap(GameObject.Find(listToPartition.Where(xx => xx.Height == left).First().Height.ToString()), GameObject.Find(listToPartition.Where(xx => xx.Height == right).First().Height.ToString()));
+    //        }
+    //        else
+    //        {
+    //            return listToPartition.Where(xx => xx.Height == right).First().Height;
+    //        }
+    //    }
+    //}
+
+    public void QuickSort(float[] listToSort)
+    {
+        if (listToSort.Length > 1)
+        {
+            float pivot = listToSort[0];
+            int left = 0;
+            int right = listToSort.Length - 1;
+            while (left <= right)
+            {
+                while (listToSort[left] < pivot)
+                {
+                    left++;
+                }
+                while (listToSort[right] > pivot)
+                    right--;
+                if (left <= right)
+                {
+                    Swap(GameObject.Find(listToSort[left].ToString()), GameObject.Find(listToSort[right].ToString()));
+                    left++;
+                    right--;
+                }
+            }
+            List<float> startToPivot = new List<float>();
+            List<float> pivotToEnd = new List<float>();
+
+            for (int i = 0; i < left; i++)
+                startToPivot.Add(listToSort[i]);
+            QuickSort(startToPivot.ToArray());
+
+            for (int i = 0; i < right; i++)
+                pivotToEnd.Add(listToSort[i]);
+            QuickSort(pivotToEnd.ToArray());
+                    
+        }
     }
 
     public void Swap(GameObject currentPosition, GameObject NewPosition)
@@ -89,6 +142,6 @@ public class Quicksorter : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
-            QuickSort();
+            QuickSort(ItemsToSort.Select(xx => xx.Height).ToArray());
     }
 }

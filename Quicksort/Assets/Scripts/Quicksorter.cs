@@ -107,7 +107,9 @@ public class Quicksorter : MonoBehaviour
                 if (left <= right)
                 {
                     Swap(GameObject.Find(listToSort[left].ToString()), GameObject.Find(listToSort[right].ToString()));
-
+                    var temp = listToSort[left];
+                    listToSort[left] = listToSort[right];
+                    listToSort[right] = temp;
                     left++;
                     right--;
                 }
@@ -115,11 +117,11 @@ public class Quicksorter : MonoBehaviour
             List<float> startToPivot = new List<float>();
             List<float> pivotToEnd = new List<float>();
 
-            for (int i = 0; i < right; i++)
+            for (int i = 0; i <= right; i++)
                 startToPivot.Add(listToSort[i]);
             QuickSort(startToPivot.ToArray());
 
-            for (int i = left; i < listToSort.Length -1; i++)
+            for (int i = left; i <= listToSort.Length -1; i++)
                 pivotToEnd.Add(listToSort[i]);
             QuickSort(pivotToEnd.ToArray());
                     

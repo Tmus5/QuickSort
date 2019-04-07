@@ -90,7 +90,7 @@ public class Quicksorter : MonoBehaviour
     //    }
     //}
 
-    public void QuickSort(float[] listToSort)
+    public IEnumerator QuickSort(float[] listToSort)
     {
         if (listToSort.Length > 1)
         {
@@ -112,6 +112,7 @@ public class Quicksorter : MonoBehaviour
                     listToSort[right] = temp;
                     left++;
                     right--;
+                    yield return new WaitForSecondsRealtime(.2f);
                 }
             }
             List<float> startToPivot = new List<float>();
@@ -119,11 +120,11 @@ public class Quicksorter : MonoBehaviour
 
             for (int i = 0; i <= right; i++)
                 startToPivot.Add(listToSort[i]);
-            QuickSort(startToPivot.ToArray());
+            StartCoroutine(QuickSort(startToPivot.ToArray()));
 
             for (int i = left; i <= listToSort.Length -1; i++)
                 pivotToEnd.Add(listToSort[i]);
-            QuickSort(pivotToEnd.ToArray());
+            StartCoroutine(QuickSort(pivotToEnd.ToArray()));
                     
         }
     }
@@ -145,6 +146,6 @@ public class Quicksorter : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
-            QuickSort(ItemsToSort.Select(xx => xx.Height).ToArray());
+            StartCoroutine(QuickSort(ItemsToSort.Select(xx => xx.Height).ToArray()));
     }
 }
